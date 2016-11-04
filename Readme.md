@@ -3,11 +3,11 @@
 ## Get Started
 + Install Zookeeper
 
-http://macappstore.org/zookeeper/
+  http://macappstore.org/zookeeper/
 
 + Download Kafka Installation folder - Binary: kafka_2.10-0.10.1.0.tgz
 
-https://kafka.apache.org/downloads 
+  https://kafka.apache.org/downloads 
 
 + Open terminal & go into kafka installation folder 
 
@@ -40,4 +40,4 @@ https://kafka.apache.org/downloads
   ```
 
 ### Need help with understanding what is going on, try
-https://www.youtube.com/watch?v=ArUHr3Czx-8
+  https://www.youtube.com/watch?v=ArUHr3Czx-8
