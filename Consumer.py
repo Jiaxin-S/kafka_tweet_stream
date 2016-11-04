@@ -6,4 +6,4 @@ consumer = KafkaConsumer(bootstrap_servers='localhost:9092', auto_offset_reset='
 consumer.subscribe(['test'])
 
 for message in consumer:
-    print (message)
+    print (message.value)

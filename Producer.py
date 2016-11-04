@@ -5,6 +5,9 @@ import tweepy
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 import ConfigParser
+import struct
+import traceback
+import sys
 
 # API Keys
 config = ConfigParser.ConfigParser()
@@ -22,9 +25,11 @@ producer = KafkaProducer(bootstrap_servers=['localhost:9092']) # Create a produc
 class TweetListener(StreamListener):
     def on_data(self, data):
         try:
-            sendTweet(data, producer)
+            print "in try"
+            sendTweet(data)
         except:
             print("No location data found")
+            traceback.print_exc(file=sys.stdout)
 
         return(True)
 
@@ -38,12 +43,15 @@ class TweetListener(StreamListener):
 
 # producer sends tweet to consumer
 def sendTweet(data):
+    print "in sendTweet"
     # get tweet text
     json_data_file = json.loads(data)
     tweet = json_data_file["text"]
     print tweet
     # producer send tweets to kafka consumer
-    producer.send('test', tweet)
+    t = tweet.encode('utf-8')
+    producer.send('test', t)
+    print "after sending"
 
 
 def main():
@@ -51,7 +59,7 @@ def main():
     auth = tweepy.OAuthHandler(consumerKey, consumerSecret)
     auth.set_access_token(accessToken, accessSecret)
     i = 0
-    while i < 5:
+    while i < 1:
         try:
             print "in while loop"
             # connect to Twitter API and get tweet
@@ -60,6 +68,7 @@ def main():
             i = i + 1
         except:
             print("Print restart")
+            traceback.print_exc(file=sys.stdout)
             i = i + 1
             continue
 
