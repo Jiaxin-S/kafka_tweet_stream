@@ -1,11 +1,9 @@
 from kafka import KafkaProducer
-from kafka.errors import KafkaError
 import json
 import tweepy
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 import ConfigParser
-import struct
 import traceback
 import sys
 
@@ -21,15 +19,13 @@ accessSecret=config.get('API Keys', 'accessSecret')
 REQUEST_LIMIT = 420
 producer = KafkaProducer(bootstrap_servers=['localhost:9092']) # Create a producer and connect to Zookeeper
 
-
 class TweetListener(StreamListener):
     def on_data(self, data):
         try:
-            print "in try"
             sendTweet(data)
         except:
             print("No location data found")
-            traceback.print_exc(file=sys.stdout)
+            # traceback.print_exc(file=sys.stdout)
 
         return(True)
 
@@ -40,10 +36,8 @@ class TweetListener(StreamListener):
             print("Request limit reached. Trying again...")
             exit()
 
-
 # producer sends tweet to consumer
 def sendTweet(data):
-    print "in sendTweet"
     # get tweet text
     json_data_file = json.loads(data)
     tweet = json_data_file["text"]
@@ -51,8 +45,6 @@ def sendTweet(data):
     # producer send tweets to kafka consumer
     t = tweet.encode('utf-8')
     producer.send('test', t)
-    print "after sending"
-
 
 def main():
     # Set up API connection info
@@ -61,14 +53,13 @@ def main():
     i = 0
     while i < 1:
         try:
-            print "in while loop"
             # connect to Twitter API and get tweet
             twitterStream = Stream(auth, TweetListener())
             twitterStream.filter(track="car")
             i = i + 1
         except:
-            print("Print restart")
-            traceback.print_exc(file=sys.stdout)
+            # print("Print restart")
+            # traceback.print_exc(file=sys.stdout)
             i = i + 1
             continue
 
